@@ -313,3 +313,226 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+<!---Assessment Concept--->
+
+#### `GET /api/assessment` - Gets a new assessment
+
+**Returns**
+
+- A dictionary containing the questions for the assessment, the answer choices, and the correct answer
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `GET /api/assessment/score` - Gets results and date of the last assessment of the user with username `user`
+
+**Body**
+- 'user' *{string}* - The user's username
+- `answers` {dictionary} - the user answers to the quiz
+
+**Returns**
+
+- An integer detailing the score of the latest assessment
+- Success message if passed
+- Next steps if failed
+
+**Throws**
+- `403` if the user is not logged in
+- `400` id an assessment has not been taken yet
+
+#### `PUT /api/assessment/score` - Updates the result and date of the last assessment of the user with username `user`
+
+**Body**
+- `user` *{string}* - The user's username
+- `date` *{Date}* - The date of last assessment
+- `score` *{Int}* - The score of the last assessment
+
+**Returns**
+
+- An integer detailing the score of the latest assessment
+- Success message if passed
+- Next steps if failed
+- An object with the updated results and date
+
+**Throws**
+- `403` if the user is not logged in
+- `400` if an assessment has not been taken yet
+
+#### `GET /api/assessment/status` - gets the assessment status of the user with username `user`
+
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- A boolean: `true` for passed and `false` for failed
+
+**Throws**
+- `403` if the user is not logged in
+- `400` if an assessment has not been taken yet
+
+<!---Memories Concept--->
+#### `GET /api/memories` - gets all memories of the user with username `user` on the current date `date`
+
+**Body**
+- `user` *{string}* - The user's username
+- `date` *{Date object}* The current date
+
+**Returns**
+
+- A list containing all interactions and posts on that same day from previous years
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `PUT /api/memories` - updates the memories of the user with username `user` on the current date `date`
+
+**Body**
+- `user` *{string}* - The user's username
+- `date` *{Date object}* The current date
+
+**Returns**
+
+- A success message
+- An object containing the updated memories
+
+**Throws**
+- `403` if the user is not logged in
+
+<!---Filter Concept--->
+#### `GET /api/filter` - gets the status of the filter for the user with username `user`
+
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- A boolean: `true` for the filter is on and `false` for the filter is off
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `PUT /api/filter` - updates the status of the filter for the user with username `user`
+
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- A success message
+- An object with the updated status
+
+**Throws**
+- `403` if the user is not logged in
+
+<!---Follow Concept--->
+#### `GET /api/follow` - gets all of the users that the user with username `user` follows
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- An array containing all of the usernames that the user follows
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `GET /api/followers` - gets all of the users that follow the user with username `user`
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- An array containing all of the usernames that follow the user
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `PUT /api/follow/follows` - updates the user with the username `userA` to follow `userB`
+**Body**
+- `userA` *{string}* - The user's username
+- `userB` *{string}* - The username of the user that `userA` follows
+
+**Returns**
+
+- A success message
+- An object with the updated followers
+
+**Throws**
+- `403` if the user is not logged in
+- `404` if `userB` is not valid username
+
+#### `PUT /api/follow/unfollows` - updates the user with the username `userA` to unfollow `userB`
+**Body**
+- `userA` *{string}* - The user's username
+- `userB` *{string}* - The username of the user that `userA` unfollows
+
+**Returns**
+
+- A success message
+- An object with the updated followers
+
+**Throws**
+- `403` if the user is not logged in
+- `404` if `userB` is not valid username
+- `400` if the user does not follow `userB`
+
+<!---Interaction Concept--->
+#### `GET /api/interactions` - gets all of the posts that the user with username `user` has interacted with
+**Body**
+- `user` *{string}* - The user's username
+
+**Returns**
+
+- An array containing all of the posts that the user has interacted with
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `POST /api/interactions` - adds an interaction of type `interaction` to the post with `postID` and associates the interaction with the user with username `user`
+**Body**
+- `user` *{string}* - The user's username
+- `postID` *{int}* - The ID of the specific post
+- `interaction` *{string}* - the type of interaction represented as a string
+
+**Returns**
+
+- A success message
+- A created object of the interaction with the user and postID
+
+**Throws**
+- `403` if the user is not logged in
+- `400` if the post does not exist
+- `400` if the interaction not in pre-set interactions
+
+#### `PUT /api/interactions` - updates an interaction of type `interaction` to the post with `postID` and associates the interaction with the user with username `user`
+**Body**
+- `user` *{string}* - The user's username
+- `postID` *{int}* - The ID of the specific post
+- `interaction` *{string}* - the type of interaction represented as a string
+
+**Returns**
+
+- A success message
+- An updated object of the interaction with the user and postID
+
+**Throws**
+- `403` if the user is not logged in
+- `400` if the post does not exist
+- `400` if the interaction not in pre-set interactions
+- `401` if the user has not interacted with the post 
+
+#### `DELETE /api/interactions` - deletes an interaction on the post with `postID` that is associated with the user with username `user`
+**Body**
+- `user` *{string}* - The user's username
+- `postID` *{int}* - The ID of the specific post
+
+**Returns**
+
+- A success message
+
+**Throws**
+- `403` if the user is not logged in
+- `400` if the post does not exist
+- `400` if the user did not interact with that post
