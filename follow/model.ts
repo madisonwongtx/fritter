@@ -1,5 +1,6 @@
-import type {Types} from 'mongoose';
+import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
+import type {User} from '../user/model';
 
 /**
  * This file defines the properties stored in a User
@@ -8,22 +9,23 @@ import {Schema, model} from 'mongoose';
 
 // Type definition for User on the backend
 export type Follow = {
-  toFollow: string; // Username of the user to follow
-  follower: string; // Username of the user
+  _id: Types.ObjectId;
+  toFollow: User;
+  follower: User;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
-const FollowSchema = new Schema({
+const FollowSchema = new Schema<Follow>({
   // The user's username
   toFollow: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   },
   follower: {
-    type: String,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: 'User'
   }

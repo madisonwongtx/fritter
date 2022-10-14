@@ -33,6 +33,7 @@ router.get(
       next();
       return;
     }
+    // Why do you need to get all the freets?
 
     const allFreets = await FreetCollection.findAll();
     const response = allFreets.map(util.constructFreetResponse);

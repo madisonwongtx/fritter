@@ -415,7 +415,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 
 <!---Follow Concept--->
-#### `GET /api/follow?user=USERNAME` - gets all of the users that the user with username `USERNAME` follows
+#### `GET /api/follow` - gets all of the users that the user follows
 
 **Returns**
 
@@ -424,7 +424,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `GET /api/followers?user=USERNAME` - gets all of the users that follow the user with username `USERNAME`
+#### `GET /api/follow/followers` - gets all of the users that follow the user
 
 **Returns**
 
@@ -433,34 +433,34 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `PUT /api/follow` - updates the user with the username `userA` to follow `userB`
+#### `POST /api/follow` - creates a following with the user with the username `user`
+
 **Body**
-- `userA` *{string}* - The user's username
-- `userB` *{string}* - The username of the user that `userA` follows
+- `user` *{string}* - The username of the user to unfollow
 
 **Returns**
 
 - A success message
-- An object with the updated followers
+- An object representing the new follow
 
 **Throws**
 - `403` if the user is not logged in
-- `404` if `userB` is not valid username
+- `413` if the session user already follows `user`
+- `404` is `user` does not exist
 
-#### `DELETE /api/follow` - updates the user with the username `userA` to unfollow `userB`
+#### `DELETE /api/follow` - deletes the following between session user and user with the username `user`
+
 **Body**
-- `userA` *{string}* - The user's username
-- `userB` *{string}* - The username of the user that `userA` unfollows
+- `user` *{string}* - The username of the user to unfollow
 
 **Returns**
 
 - A success message
-- An object with the updated followers
 
 **Throws**
 - `403` if the user is not logged in
-- `404` if `userB` is not valid username
-- `400` if the user does not follow `userB`
+- `413` if the session user does not follow `user`
+- `404` if `user` does not exist
 
 <!---Interaction Concept--->
 #### `GET /api/interactions?user=USERNAME` - gets all of the posts that the user with username `USERNAME` has interacted with

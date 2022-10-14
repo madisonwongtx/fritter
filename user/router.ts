@@ -34,6 +34,7 @@ router.post(
       req.body.username, req.body.password
     );
     req.session.userId = user._id.toString();
+    console.log('You have logged in successfully');
     res.status(201).json({
       message: 'You have logged in successfully',
       user: util.constructUserResponse(user)
