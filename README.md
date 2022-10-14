@@ -2,6 +2,8 @@
 
 Build your own not-quite-[Twitter](https://twitter.com/)!
 
+Link to my app: [Fritter](fritter-madisonwongtx.vercel.app)
+
 ## Starter Code
 
   This starter code implements users (with login/sessions), and freets so that you may focus on implementing your own design ideas.
@@ -325,10 +327,9 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `GET /api/assessment/score` - Gets results and date of the last assessment of the user with username `user`
+#### `GET /api/assessment/score?user=USERNAME` - Gets results and date of the last assessment of the user with username `USERNAME`
 
 **Body**
-- 'user' *{string}* - The user's username
 - `answers` {dictionary} - the user answers to the quiz
 
 **Returns**
@@ -345,8 +346,6 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Body**
 - `user` *{string}* - The user's username
-- `date` *{Date}* - The date of last assessment
-- `score` *{Int}* - The score of the last assessment
 
 **Returns**
 
@@ -359,10 +358,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `400` if an assessment has not been taken yet
 
-#### `GET /api/assessment/status` - gets the assessment status of the user with username `user`
-
-**Body**
-- `user` *{string}* - The user's username
+#### `GET /api/assessment/status?user=USERNAME` - gets the assessment status of the user with username `USERNAME`
 
 **Returns**
 
@@ -373,11 +369,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if an assessment has not been taken yet
 
 <!---Memories Concept--->
-#### `GET /api/memories` - gets all memories of the user with username `user` on the current date `date`
-
-**Body**
-- `user` *{string}* - The user's username
-- `date` *{Date object}* The current date
+#### `GET /api/memories?user=USERNAME` - gets all memories of the user with username `USERNAME` 
 
 **Returns**
 
@@ -386,11 +378,10 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `PUT /api/memories` - updates the memories of the user with username `user` on the current date `date`
+#### `PUT /api/memories` - updates the memories of the user with username `user` 
 
 **Body**
 - `user` *{string}* - The user's username
-- `date` *{Date object}* The current date
 
 **Returns**
 
@@ -401,10 +392,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 
 <!---Filter Concept--->
-#### `GET /api/filter` - gets the status of the filter for the user with username `user`
-
-**Body**
-- `user` *{string}* - The user's username
+#### `GET /api/filter?user=USERNAME` - gets the status of the filter for the user with username `user`
 
 **Returns**
 
@@ -413,7 +401,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `PUT /api/filter` - updates the status of the filter for the user with username `user`
+#### `PUT /api/filter/` - updates the status of the filter for the user with username `user`
 
 **Body**
 - `user` *{string}* - The user's username
@@ -427,9 +415,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 
 <!---Follow Concept--->
-#### `GET /api/follow` - gets all of the users that the user with username `user` follows
-**Body**
-- `user` *{string}* - The user's username
+#### `GET /api/follow?user=USERNAME` - gets all of the users that the user with username `USERNAME` follows
 
 **Returns**
 
@@ -438,9 +424,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `GET /api/followers` - gets all of the users that follow the user with username `user`
-**Body**
-- `user` *{string}* - The user's username
+#### `GET /api/followers?user=USERNAME` - gets all of the users that follow the user with username `USERNAME`
 
 **Returns**
 
@@ -449,7 +433,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `PUT /api/follow/follows` - updates the user with the username `userA` to follow `userB`
+#### `PUT /api/follow` - updates the user with the username `userA` to follow `userB`
 **Body**
 - `userA` *{string}* - The user's username
 - `userB` *{string}* - The username of the user that `userA` follows
@@ -463,7 +447,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `404` if `userB` is not valid username
 
-#### `PUT /api/follow/unfollows` - updates the user with the username `userA` to unfollow `userB`
+#### `DELETE /api/follow` - updates the user with the username `userA` to unfollow `userB`
 **Body**
 - `userA` *{string}* - The user's username
 - `userB` *{string}* - The username of the user that `userA` unfollows
@@ -479,9 +463,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `400` if the user does not follow `userB`
 
 <!---Interaction Concept--->
-#### `GET /api/interactions` - gets all of the posts that the user with username `user` has interacted with
-**Body**
-- `user` *{string}* - The user's username
+#### `GET /api/interactions?user=USERNAME` - gets all of the posts that the user with username `USERNAME` has interacted with
 
 **Returns**
 
