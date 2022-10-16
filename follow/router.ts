@@ -4,7 +4,7 @@ import FollowCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as followValidator from '../follow/middleware';
 import * as util from './util';
-import UserCollection from 'user/collection';
+import UserCollection from '../user/collection';
 
 const router = express.Router();
 
@@ -43,7 +43,7 @@ router.get(
  *
  */
 router.get(
-  '/',
+  '/followers',
   [
     userValidator.isUserLoggedIn
   ],
@@ -72,11 +72,18 @@ router.get(
  */
 router.post(
   '/',
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.user !== undefined) {
+      next();
+    }
+  },
   [
+    userValidator.isUserLoggedIn,
     userValidator.isValidUsername,
-    followValidator.isAlreadyFollow,
-    userValidator.isUserLoggedIn
+    followValidator.isAlreadyFollow
   ],
+  // When i put console log in the async function below it does not print
+  // Think issue is somehow sending a promise instead of user type into follow type
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
     const targetUser = await UserCollection.findOneByUsername(req.body.user);
@@ -104,9 +111,9 @@ router.post(
 router.delete(
   '/',
   [
+    userValidator.isUserLoggedIn,
     userValidator.isValidUsername,
-    followValidator.isAlreadyUnfollow,
-    userValidator.isUserLoggedIn
+    followValidator.isAlreadyUnfollow
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
@@ -118,3 +125,5 @@ router.delete(
     });
   }
 );
+
+export {router as followRouter};

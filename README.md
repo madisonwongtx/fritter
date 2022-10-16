@@ -447,6 +447,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `413` if the session user already follows `user`
 - `404` is `user` does not exist
+- `400` if `user` is the current session user
 
 #### `DELETE /api/follow` - deletes the following between session user and user with the username `user`
 

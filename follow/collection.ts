@@ -12,14 +12,14 @@ class FollowCollection {
    * @return {Promise<HydratedDocument<Follow>>} - The new following
    */
   static async follow(followingID: Types.ObjectId | string, followerID: Types.ObjectId | string): Promise<HydratedDocument<Follow>> {
-    const targetFollow = UserCollection.findOneByUserId(followingID);
-    const user = UserCollection.findOneByUserId(followerID);
+    const targetFollow = await UserCollection.findOneByUserId(followingID);
+    const user = await UserCollection.findOneByUserId(followerID);
     const new_follow = new FollowModel({
       toFollow: targetFollow,
       follower: user
     });
     await new_follow.save();
-    return new_follow.populate('toFollow', 'follower');
+    return new_follow;
   }
 
   /**
@@ -30,8 +30,8 @@ class FollowCollection {
    * @return {Promise<Boolean>} - true if the following relationship has been deleted, false otherwise
    */
   static async unfollow(followingID: Types.ObjectId | string, followerID: Types.ObjectId | string): Promise<boolean> {
-    const targetUnfollow = UserCollection.findOneByUserId(followingID);
-    const user = UserCollection.findOneByUserId(followerID);
+    const targetUnfollow = await UserCollection.findOneByUserId(followingID);
+    const user = await UserCollection.findOneByUserId(followerID);
     const result = await FollowModel.deleteOne({toFollow: targetUnfollow, follower: user});
     return result !== null;
   }
@@ -44,7 +44,7 @@ class FollowCollection {
    */
   static async findAllFollowing(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Follow>>> {
     const user = await UserCollection.findOneByUserId(userId); // Finds user object
-    return FollowModel.find({follower: user}).populate('follower');
+    return FollowModel.find({follower: user}).populate('toFollow');
   }
 
   /**
@@ -55,7 +55,7 @@ class FollowCollection {
    */
   static async findAllFollowers(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Follow>>> {
     const user = await UserCollection.findOneByUserId(userId);
-    return FollowModel.find({toFollow: user._id}).populate('follower');
+    return FollowModel.find({toFollow: user}).populate('follower');
   }
 
   /**
@@ -65,9 +65,9 @@ class FollowCollection {
    * @param {string} followerID - the id of the user
    * @return {Promise<HydratedDocument<Follow>[]>} - An array of all the users that hte user is following
    */
-  static async findOne(followingID: Types.ObjectId | string, followerID: Types.ObjectId | string): Promise<HydratedDocument<Follow>> {
-    const user = UserCollection.findOneByUserId(followerID);
-    const following = UserCollection.findOneByUserId(followingID);
+  static async findOne(followingID: Types.ObjectId | string, followerID: Types.ObjectId | string): Promise<HydratedDocument<Follow>> | undefined {
+    const user = await UserCollection.findOneByUserId(followerID);
+    const following = await UserCollection.findOneByUserId(followingID);
     return FollowModel.findOne({toFollow: following, follower: user});
   }
 }

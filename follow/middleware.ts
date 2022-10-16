@@ -1,17 +1,25 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
-import UserCollection from 'user/collection';
+import UserCollection from '../user/collection';
 import FollowCollection from '../follow/collection';
+import FollowModel from './model';
 
 /**
  * Checks if a user with userA already follows another user UserB in req.params
  */
 const isAlreadyFollow = async (req: Request, res: Response, next: NextFunction) => {
-  const validUser = Types.ObjectId.isValid(req.session.userId);
+  if (!req.body.user) {
+    res.status(400).json({error: 'Missing username to follow'});
+    return;
+  }
+
   const user = await UserCollection.findOneByUserId(req.session.userId);
+  if (user.username === req.body.user) {
+    res.status(400).json({error: 'You cannot follow yourself'});
+    return;
+  }
+
   const target = await UserCollection.findOneByUsername(req.body.user);
-  const validTarget = Types.ObjectId.isValid(target.id);
-  const relationship = (validUser && validTarget) ? await FollowCollection.findOne(target.id, user.id) : '';
   if (!target) {
     res.status(404).json({
       error: {
@@ -21,6 +29,7 @@ const isAlreadyFollow = async (req: Request, res: Response, next: NextFunction) 
     return;
   }
 
+  const relationship = await FollowCollection.findOne(target.id, user.id);
   if (relationship) {
     res.status(413).json({
       error: {
@@ -37,13 +46,15 @@ const isAlreadyFollow = async (req: Request, res: Response, next: NextFunction) 
  * Checks if a user with userA already follows another user UserB in req.params
  */
 const isAlreadyUnfollow = async (req: Request, res: Response, next: NextFunction) => {
-  const validUser = Types.ObjectId.isValid(req.session.userId);
+  if (!req.body.user) {
+    res.status(400).json({error: 'Missing username to unfollow'});
+    return;
+  }
+
   const user = await UserCollection.findOneByUserId(req.session.userId);
   const target = await UserCollection.findOneByUsername(req.body.user);
-  const validTarget = Types.ObjectId.isValid(target.id);
-  const relationship = (validUser && validTarget) ? await FollowCollection.findOne(target.id, user.id) : '';
 
-  if (!validTarget) {
+  if (!target) {
     res.status(404).json({
       error: {
         userDoesNotExist: 'The user you are trying to unfollow does not exist.'
@@ -51,6 +62,8 @@ const isAlreadyUnfollow = async (req: Request, res: Response, next: NextFunction
     });
     return;
   }
+
+  const relationship = await FollowCollection.findOne(target.id, user.id);
 
   if (!relationship) {
     res.status(413).json({

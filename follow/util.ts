@@ -20,7 +20,7 @@ const constructFollowResponse = (follow: HydratedDocument<Follow>): FollowRespon
       versionKey: false
     })
   };
-
+  // console.log(followCopy.toFollow.username);
   return {
     toFollow: followCopy.toFollow.username,
     follower: followCopy.follower.username
