@@ -519,3 +519,12 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `400` if the post does not exist
 - `400` if the user did not interact with that post
+
+<!---Feed Concept--->
+#### `GET /api/feed` - gets the feed for the current user session
+
+**Returns**
+- An array of posts made by the user's they follow sorted by date
+
+**Throws**
+- `403` if the user is not logged in
