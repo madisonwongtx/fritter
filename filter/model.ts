@@ -16,7 +16,8 @@ const FilterSchema = new Schema<Filter>({
   },
   status: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false // Auto sets to false
   }
 });
 

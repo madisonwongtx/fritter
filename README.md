@@ -392,7 +392,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 
 <!---Filter Concept--->
-#### `GET /api/filter?user=USERNAME` - gets the status of the filter for the user with username `user`
+#### `GET /api/filter` - gets the status of the filter for the current session user
 
 **Returns**
 
@@ -401,10 +401,17 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `PUT /api/filter/` - updates the status of the filter for the user with username `user`
+#### `PUT /api/filter` - switches the status of the filter for the current session user
 
-**Body**
-- `user` *{string}* - The user's username
+**Returns**
+
+- A success message
+- An object with the new status
+
+**Throws**
+- `403` if the user is not logged in
+
+#### `POST /api/filter/` - creates a filter object for the newly created user
 
 **Returns**
 

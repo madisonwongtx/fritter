@@ -42,7 +42,9 @@ const formsAndHandlers = {
   'follow-user': followUser,
   'unfollow-user': unfollowUser,
   'all-following': allFollowing,
-  'all-followers': allFollowers
+  'all-followers': allFollowers,
+  'get-status': userStatus,
+  'switch-status': switchUserFilter
 
 };
 

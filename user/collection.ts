@@ -1,4 +1,5 @@
 import type {HydratedDocument, Types} from 'mongoose';
+import FilterCollection from '../filter/collection';
 import type {User} from './model';
 import UserModel from './model';
 
@@ -23,6 +24,7 @@ class UserCollection {
 
     const user = new UserModel({username, password, dateJoined});
     await user.save(); // Saves user to MongoDB
+    const filter = await FilterCollection.createFilter(user.id); // Create new filter
     return user;
   }
 
