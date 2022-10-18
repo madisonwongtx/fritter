@@ -44,8 +44,11 @@ const formsAndHandlers = {
   'all-following': allFollowing,
   'all-followers': allFollowers,
   'get-status': userStatus,
-  'switch-status': switchUserFilter
-
+  'switch-status': switchUserFilter,
+  'get-interactions': getInteractions,
+  'create-interaction': createInteraction,
+  'change-interaction': changeInteraction,
+  'delete-interaction': deleteInteraction
 };
 
 // Attach handlers to forms

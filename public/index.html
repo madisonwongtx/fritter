@@ -9,6 +9,7 @@
   <script src="/scripts/user.js"></script>
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/filter.js"></script>
+  <script src="/scripts/interaction.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -156,6 +157,46 @@
         <form id="switch-status">
           <h3>Switch Filter</h3>
           <input type="submit" value="Switch Filter">
+        </form>
+
+        <form id="get-interactions">
+          <h3>Get you freets you have interacted with</h3>
+          <input type="submit" value="Get Interactions">
+        </form>
+
+        <form id="create-interaction">
+          <h3>Add Interaction</h3>
+          <div>
+            <label for="freetId">freetId:</label>
+            <textarea id="freetId" name="freetId"></textarea>
+          </div>
+          <div>
+            <label for="interaction-type">Interaction type (thumbs up/down, heart, happy, sad, angry, clapping, laughing, dead):</label>
+            <textarea id="interaction_type" name="interaction_type"></textarea>
+          </div>
+          <input type="submit" value="Add interaction">
+        </form>
+
+        <form id="change-interaction">
+          <h3>Change Interaction</h3>
+          <div>
+            <label for="freetId">freetId:</label>
+            <textarea id="freetId" name="freetId"></textarea>
+          </div>
+          <div>
+            <label for="interaction-type">Interaction type (thumbs up/down, heart, happy, sad, angry, clapping, laughing, dead):</label>
+            <textarea id="interaction_type" name="interaction_type"></textarea>
+          </div>
+          <input type="submit" value="Change Interaction">
+        </form>
+
+        <form id="delete-interaction">
+          <h3>Remove Interaction</h3>
+          <div>
+            <label for="freetId">freetId:</label>
+            <textarea id="freetId" name="freetId"></textarea>
+          </div>
+          <input type="submit" value="Remove Interaction">
         </form>
 
       </div>

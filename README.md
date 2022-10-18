@@ -471,7 +471,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if `user` does not exist
 
 <!---Interaction Concept--->
-#### `GET /api/interactions?user=USERNAME` - gets all of the posts that the user with username `USERNAME` has interacted with
+#### `GET /api/interactions` - gets all of the posts that the current session user has interacted with
 
 **Returns**
 
@@ -480,9 +480,9 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `POST /api/interactions` - adds an interaction of type `interaction` to the post with `postID` and associates the interaction with the user with username `user`
+#### `POST /api/interactions` - adds an interaction of type `interaction` to the post with `postID` and associates the interaction with the current user of the session
+
 **Body**
-- `user` *{string}* - The user's username
 - `postID` *{int}* - The ID of the specific post
 - `interaction` *{string}* - the type of interaction represented as a string
 
@@ -494,11 +494,11 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 - `400` if the post does not exist
-- `400` if the interaction not in pre-set interactions
+- `401` if the interaction not in pre-set interactions
+- `413` if the user has already interacted with this post
 
-#### `PUT /api/interactions` - updates an interaction of type `interaction` to the post with `postID` and associates the interaction with the user with username `user`
+#### `PUT /api/interactions` - updates an interaction of type `interaction` to the post with `postID` and associates the interaction with the current session user
 **Body**
-- `user` *{string}* - The user's username
 - `postID` *{int}* - The ID of the specific post
 - `interaction` *{string}* - the type of interaction represented as a string
 
@@ -510,12 +510,11 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 - `400` if the post does not exist
-- `400` if the interaction not in pre-set interactions
-- `401` if the user has not interacted with the post 
+- `401` if the interaction not in pre-set interactions
+- `413` if the user has not interacted with the post 
 
-#### `DELETE /api/interactions` - deletes an interaction on the post with `postID` that is associated with the user with username `user`
+#### `DELETE /api/interactions` - deletes an interaction on the post with `postID` that is associated with the current session user
 **Body**
-- `user` *{string}* - The user's username
 - `postID` *{int}* - The ID of the specific post
 
 **Returns**
@@ -525,7 +524,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 - `400` if the post does not exist
-- `400` if the user did not interact with that post
+- `413` if the user did not interact with that post
 
 <!---Feed Concept--->
 #### `GET /api/feed` - gets the feed for the current user session
