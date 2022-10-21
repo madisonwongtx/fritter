@@ -46,3 +46,5 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
 export {
   constructFreetResponse
 };
+
+export type {FreetResponse};

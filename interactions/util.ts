@@ -1,10 +1,12 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
 import type {Interaction} from '../interactions/model';
+import UserCollection from '../user/collection';
 
 type InteractionResponse = {
   user: string;
   freetContent: string;
+  freetAuthor: string;
   interaction_type: string;
   dateCreated: string;
 };
@@ -24,16 +26,19 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @param {HydratedDocument<Interaction>} interaction - an interaction
  * @returns {InteractionResponse} - The interaction object formatted for the frontend
  */
-const constructInteractionResponse = (interaction: HydratedDocument<Interaction>): InteractionResponse => {
+const constructInteractionResponse = async (interaction: HydratedDocument<Interaction>): Promise<InteractionResponse> => {
   const interactionCopy: Interaction = {
     ...interaction.toObject({
       versionKey: false
     })
   };
 
+  const user = await UserCollection.findOneByUserId(interaction.freet.authorId);
+
   return {
     user: interaction.user.username,
     freetContent: interaction.freet.content,
+    freetAuthor: user.username,
     interaction_type: interaction.interaction,
     dateCreated: formatDate(interaction.dateCreated)
   };

@@ -24,7 +24,7 @@ router.get(
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
     const interactions = await InteractionCollection.getInteractions(userId);
-    const response = interactions.map(util.constructInteractionResponse);
+    const response = await Promise.all(interactions.map(util.constructInteractionResponse));
     res.status(200).json({
       message: 'Here are your interactions',
       result: response
@@ -58,7 +58,7 @@ router.post(
 
     res.status(201).json({
       message: 'You have added your interaction!',
-      output: util.constructInteractionResponse(interaction)
+      output: await util.constructInteractionResponse(interaction)
     });
   }
 );
@@ -89,7 +89,7 @@ router.put(
 
     res.status(201).json({
       message: 'You have updated your interaction',
-      output: util.constructInteractionResponse(interaction)
+      output: await util.constructInteractionResponse(interaction)
     });
   }
 );

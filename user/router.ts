@@ -177,7 +177,7 @@ router.get(
     const mems = await UserCollection.findMemories(userId);
     res.status(200).json({
       messsage: 'Here are your memories',
-      output: mems
+      output: await Promise.all(mems.map(util.constructMemoriesResponse))
     });
   }
 );
