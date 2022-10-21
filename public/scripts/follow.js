@@ -25,3 +25,9 @@ function allFollowers(fields) {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function viewFeed(fields) {
+  fetch('/api/follow/feed')
+    .then(showResponse)
+    .catch(showResponse);
+}

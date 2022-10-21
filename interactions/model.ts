@@ -8,7 +8,7 @@ export type Interaction = {
   freet: Freet;
   user: User;
   interaction: string;
-  date: Date;
+  dateCreated: Date;
 };
 
 const InteractionSchema = new Schema<Interaction>({
@@ -26,7 +26,7 @@ const InteractionSchema = new Schema<Interaction>({
     type: String,
     required: true
   },
-  date: {
+  dateCreated: {
     type: Date,
     required: true
   }

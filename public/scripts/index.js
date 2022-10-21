@@ -34,6 +34,7 @@ const formsAndHandlers = {
   'change-password': changePassword,
   'sign-in': signIn,
   'sign-out': signOut,
+  'get-memories': getMemories,
   'view-all-freets': viewAllFreets,
   'view-freets-by-author': viewFreetsByAuthor,
   'create-freet': createFreet,
@@ -43,12 +44,16 @@ const formsAndHandlers = {
   'unfollow-user': unfollowUser,
   'all-following': allFollowing,
   'all-followers': allFollowers,
+  'get-feed': viewFeed,
   'get-status': userStatus,
   'switch-status': switchUserFilter,
   'get-interactions': getInteractions,
   'create-interaction': createInteraction,
   'change-interaction': changeInteraction,
-  'delete-interaction': deleteInteraction
+  'delete-interaction': deleteInteraction,
+  'get-quiz': getQuiz,
+  'send-answers': sendAnswers,
+  'get-score': getScore
 };
 
 // Attach handlers to forms

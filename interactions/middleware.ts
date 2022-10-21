@@ -1,7 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import FreetCollection from '../freet/collection';
 import UserCollection from '../user/collection';
-import {Types} from 'mongoose';
 import InteractionCollection from '../interactions/collection';
 
 /**
@@ -13,13 +12,13 @@ const isAlreadyExists = async (req: Request, res: Response, next: NextFunction) 
     return;
   }
 
-  if (!req.body.freetId) {
+  if (!req.params.freetId) {
     res.status(400).json({error: 'Missing freet you want to interact with'});
     return;
   }
 
   const session_user = await UserCollection.findOneByUsername(req.session.userId);
-  const curr_freet = await FreetCollection.findOne(req.body.freetId);
+  const curr_freet = await FreetCollection.findOne(req.params.freetId);
   const curr_interaction = await InteractionCollection.findOne(req.session.userId, curr_freet.id);
   if (!curr_interaction) {
     res.status(413).json({error: 'You have not interacted with this post yet'});
@@ -38,13 +37,13 @@ const isInteractionDoesNotExist = async (req: Request, res: Response, next: Next
     return;
   }
 
-  if (!req.body.freetId) {
+  if (!req.params.freetId) {
     res.status(400).json({error: 'Missing freet you want to interact with'});
     return;
   }
 
   const session_user = await UserCollection.findOneByUsername(req.session.userId);
-  const curr_freet = await FreetCollection.findOne(req.body.freetId);
+  const curr_freet = await FreetCollection.findOne(req.params.freetId);
   const curr_interaction = await InteractionCollection.findOne(req.session.userId, curr_freet.id);
   if (curr_interaction) {
     res.status(413).json({error: 'You have already interacted with this post'});
@@ -76,13 +75,13 @@ const isValidInteraction = async (req: Request, res: Response, next: NextFunctio
  * Checks if interaction already exists
  */
 const canDelete = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.freetId) {
+  if (!req.params.freetId) {
     res.status(400).json({error: 'Missing freet you want to interact with'});
     return;
   }
 
   const session_user = await UserCollection.findOneByUsername(req.session.userId);
-  const curr_freet = await FreetCollection.findOne(req.body.freetId);
+  const curr_freet = await FreetCollection.findOne(req.params.freetId);
   const curr_interaction = await InteractionCollection.findOne(req.session.userId, curr_freet.id);
   if (!curr_interaction) {
     res.status(413).json({error: 'You have not interacted with this post yet'});

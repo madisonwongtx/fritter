@@ -49,17 +49,11 @@ router.put(
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
     const new_filter = await FilterCollection.switchFilter(userId);
-    let message_ = '';
-    if (new_filter) {
-      message_ = 'Filter is now on. You will only see the posts from people you follow';
-    } else {
-      message_ = 'Filter is now off. You will see the posts and interactions from people you follow';
-    }
 
     const response = util.constructFilterResponse(new_filter);
 
     res.status(200).json({
-      message: message_,
+      message: 'Your filter status has been switched',
       filter: response
     });
   }

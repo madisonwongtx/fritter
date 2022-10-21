@@ -6,7 +6,7 @@ type InteractionResponse = {
   user: string;
   freetContent: string;
   interaction_type: string;
-  date: string;
+  dateCreated: string;
 };
 
 /**
@@ -35,7 +35,7 @@ const constructInteractionResponse = (interaction: HydratedDocument<Interaction>
     user: interaction.user.username,
     freetContent: interaction.freet.content,
     interaction_type: interaction.interaction,
-    date: formatDate(interaction.date)
+    dateCreated: formatDate(interaction.dateCreated)
   };
 };
 

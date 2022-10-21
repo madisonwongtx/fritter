@@ -49,6 +49,14 @@ class FilterCollection {
     await new_filter.save();
     return new_filter;
   }
+
+  /**
+   * Delete filter associated with the deleted user
+   */
+  static async deleteOne(userId: Types.ObjectId | string) {
+    const session_user = await UserCollection.findOneByUserId(userId);
+    const deleted = FilterModel.deleteOne({user: session_user});
+  }
 }
 
 export default FilterCollection;

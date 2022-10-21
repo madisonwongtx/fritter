@@ -210,6 +210,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `400` If the freet content is empty or a stream of empty spaces
 - `413` If the freet content is more than 140 characters long
+- `404` if the user has not passed the Good Framaritan Assessment
 
 #### `DELETE /api/freets/:freetId?` - Delete an existing freet
 
@@ -322,15 +323,12 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- A dictionary containing the questions for the assessment, the answer choices, and the correct answer
+- A dictionary containing the questions for the assessment mapping the question id number to the question.
 
 **Throws**
 - `403` if the user is not logged in
 
-#### `GET /api/assessment/score?user=USERNAME` - Gets results and date of the last assessment of the user with username `USERNAME`
-
-**Body**
-- `answers` {dictionary} - the user answers to the quiz
+#### `GET /api/assessment/score` - Gets the score of the current session user's last attempt on the assessment
 
 **Returns**
 
@@ -340,12 +338,18 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if the user is not logged in
-- `400` id an assessment has not been taken yet
 
-#### `PUT /api/assessment/score` - Updates the result and date of the last assessment of the user with username `user`
+#### `PUT /api/assessment/grade` - Updates the result and date of the last assessment for the current session user`
 
 **Body**
-- `user` *{string}* - The user's username
+- `question_1` *{string}* - The user response to question 1
+- `question_2` *{string}* - The user response to question 2
+- `question_3` *{string}* - The user response to question 3
+- `question_4` *{string}* - The user response to question 4
+- `question_5` *{string}* - The user response to question 5
+- `question_6` *{string}* - The user response to question 6
+- `question_7` *{string}* - The user response to question 7
+- `question_8` *{string}* - The user response to question 8
 
 **Returns**
 
@@ -356,37 +360,16 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if the user is not logged in
-- `400` if an assessment has not been taken yet
-
-#### `GET /api/assessment/status?user=USERNAME` - gets the assessment status of the user with username `USERNAME`
-
-**Returns**
-
-- A boolean: `true` for passed and `false` for failed
-
-**Throws**
-- `403` if the user is not logged in
-- `400` if an assessment has not been taken yet
+- `404` if there are any answer choices missing
+- `413` if the answer choices are inputted incorrectly
+- `406` if the user has already attempted this quiz
 
 <!---Memories Concept--->
-#### `GET /api/memories?user=USERNAME` - gets all memories of the user with username `USERNAME` 
+#### `GET /api/users/memories` - gets the memories of the current session user 
 
 **Returns**
 
-- A list containing all interactions and posts on that same day from previous years
-
-**Throws**
-- `403` if the user is not logged in
-
-#### `PUT /api/memories` - updates the memories of the user with username `user` 
-
-**Body**
-- `user` *{string}* - The user's username
-
-**Returns**
-
-- A success message
-- An object containing the updated memories
+- A list containing randomly chosen interactions and posts on that same day from previous years
 
 **Throws**
 - `403` if the user is not logged in
@@ -470,6 +453,16 @@ This renders the `index.html` file that will be used to interact with the backen
 - `413` if the session user does not follow `user`
 - `404` if `user` does not exist
 
+#### `GET /api/follow/feed` - Get the current feed for the current session user based off their following
+
+**Returns**
+
+- A success message
+- An array of Freet and Interaction objects of the users that the current session user follows
+
+**Throws**
+- `403` if the user is not logged in
+
 <!---Interaction Concept--->
 #### `GET /api/interactions` - gets all of the posts that the current session user has interacted with
 
@@ -480,10 +473,9 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 - `403` if the user is not logged in
 
-#### `POST /api/interactions` - adds an interaction of type `interaction` to the post with `postID` and associates the interaction with the current user of the session
+#### `POST /api/interactions/:postId?` - adds an interaction of type `interaction` to the post with `postID` and associates the interaction with the current user of the session
 
 **Body**
-- `postID` *{int}* - The ID of the specific post
 - `interaction` *{string}* - the type of interaction represented as a string
 
 **Returns**
@@ -493,13 +485,13 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if the user is not logged in
-- `400` if the post does not exist
+- `404` if the post does not exist
 - `401` if the interaction not in pre-set interactions
 - `413` if the user has already interacted with this post
 
-#### `PUT /api/interactions` - updates an interaction of type `interaction` to the post with `postID` and associates the interaction with the current session user
+#### `PUT /api/interactions/:postId` - updates an interaction of type `interaction` to the post with `postID` and associates the interaction with the current session user
+
 **Body**
-- `postID` *{int}* - The ID of the specific post
 - `interaction` *{string}* - the type of interaction represented as a string
 
 **Returns**
@@ -509,13 +501,11 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Throws**
 - `403` if the user is not logged in
-- `400` if the post does not exist
+- `404` if the post does not exist
 - `401` if the interaction not in pre-set interactions
 - `413` if the user has not interacted with the post 
 
-#### `DELETE /api/interactions` - deletes an interaction on the post with `postID` that is associated with the current session user
-**Body**
-- `postID` *{int}* - The ID of the specific post
+#### `DELETE /api/interactions/:postId` - deletes an interaction on the post with `postID` that is associated with the current session user
 
 **Returns**
 
@@ -525,12 +515,3 @@ This renders the `index.html` file that will be used to interact with the backen
 - `403` if the user is not logged in
 - `400` if the post does not exist
 - `413` if the user did not interact with that post
-
-<!---Feed Concept--->
-#### `GET /api/feed` - gets the feed for the current user session
-
-**Returns**
-- An array of posts made by the user's they follow sorted by date
-
-**Throws**
-- `403` if the user is not logged in

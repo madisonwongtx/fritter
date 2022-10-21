@@ -38,3 +38,9 @@ function signOut() {
     .then(showResponse)
     .catch(showResponse);
 }
+
+function getMemories() {
+  fetch('/api/users/memories')
+    .then(showResponse)
+    .catch(showResponse);
+}

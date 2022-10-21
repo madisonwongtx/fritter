@@ -1,6 +1,7 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
 import type {Follow} from '../follow/model';
+import InteractionCollection from 'interactions/collection';
 
 type FollowResponse = {
   toFollow: string;

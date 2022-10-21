@@ -1,6 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
+import AssessmentCollection from '../assessment/collection';
 
 /**
  * Checks if a freet with freetId is req.params exists
@@ -77,9 +78,23 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+const isPostingAllowed = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req.session.userId as string) ?? '';
+  const assess_object = await AssessmentCollection.findOne(userId);
+  if (assess_object.retake) {
+    res.status(404).json({
+      error: 'You must take and pass the Good Framaritan Assessment to gain the ability to Freet. Please take the assessment'
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isValidFreetContent,
   isFreetExists,
   isValidFreetModifier,
-  isFreetExistsBody
+  isFreetExistsBody,
+  isPostingAllowed
 };

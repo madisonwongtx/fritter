@@ -126,4 +126,27 @@ router.delete(
   }
 );
 
+/**
+  * Get the feed for the current session user based on following
+  *
+  * @name GET /api/follow/feed
+  *
+  * @return {(Freet | Interaction)[]} - The feed for the user
+  * @throws {403} - if the user is not logged in
+  */
+router.get(
+  '/feed',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? '';
+    const feed_ = await FollowCollection.getFeed(userId);
+    res.status(200).json({
+      message: 'Here is your feed',
+      feed: feed_
+    });
+  }
+);
+
 export {router as followRouter};

@@ -1,5 +1,10 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import UserCollection from '../user/collection';
+import FreetCollection from '../freet/collection';
+import InteractionCollection from '../interactions/collection';
+import FilterCollection from '../filter/collection';
+import type {Interaction} from '../interactions/model';
+import type {Freet} from '../freet/model';
 import type {Follow} from './model';
 import FollowModel from './model';
 
@@ -69,6 +74,49 @@ class FollowCollection {
     const user = await UserCollection.findOneByUserId(followerID);
     const following = await UserCollection.findOneByUserId(followingID);
     return FollowModel.findOne({toFollow: following, follower: user});
+  }
+
+  /**
+   * Get feed for the user based off their following
+   *
+   * @param {string} userId - the userId of user to get the feed for
+   * @return {Promise<HydratedDocument<FilterCollection(Freet | Interaction)>[]>} - the resulting feed made of interactions and freets
+   */
+  static async getFeed(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Freet | Interaction>>> {
+    const session_user = await UserCollection.findOneByUserId(userId);
+    const filterStatus = await FilterCollection.getStatus(userId);
+    const following = await FollowCollection.findAllFollowing(userId);
+    const usernames: string[] = [];
+    const userIds: Types.ObjectId[] = [];
+    for (const user of following) {
+      const {username} = user.toFollow;
+      const {_id} = user.toFollow;
+      usernames.push(username);
+      userIds.push(_id);
+    }
+
+    const posts_nested = await Promise.all(usernames.map(FreetCollection.findAllByUsername));
+    const posts: Array<HydratedDocument<Freet>> = posts_nested.flat(); // Flattens to 1D
+    const interactions_nested = await Promise.all(userIds.map(InteractionCollection.getInteractions));
+    const interactions: Array<HydratedDocument<Interaction>> = interactions_nested.flat();
+
+    if (filterStatus) { // Just posts
+      return posts.sort((a, b) => (a.dateCreated < b.dateCreated) ? -1 : 1);
+    }
+
+    const combined: Array<HydratedDocument<Freet | Interaction>> = [...interactions, ...posts];
+    return combined.sort((a, b) => (a.dateCreated < b.dateCreated) ? -1 : 1); // Sort in reverse order
+  }
+
+  /**
+   * Deletes all follower and following relationships with the deleted user
+   *
+   * @param {string} userId - the id of the current session user
+   */
+  static async deleteMany(userId: Types.ObjectId | string) {
+    const session_user = await UserCollection.findOneByUserId(userId);
+    const deleted = FollowModel.deleteMany({toFollow: session_user});
+    const deletedFollowing = FollowModel.deleteMany({follower: session_user});
   }
 }
 

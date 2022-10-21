@@ -13,7 +13,7 @@ class InteractionCollection {
    */
   static async getInteractions(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Interaction>>> {
     const session_user = await UserCollection.findOneByUserId(userId);
-    const interactions = await InteractionModel.find({user: session_user}).sort({date: -1}).populate('freet').populate('user');
+    const interactions = await InteractionModel.find({user: session_user}).sort({dateCreated: -1}).populate('freet').populate('user');
     return interactions;
   }
 
@@ -33,7 +33,7 @@ class InteractionCollection {
       freet: curr_freet,
       user: session_user,
       interaction: interactionType,
-      date: curr_date
+      dateCreated: curr_date
     });
     await new_interaction.save();
     return new_interaction;
@@ -52,7 +52,7 @@ class InteractionCollection {
     const curr_freet = await FreetCollection.findOne(freetId);
     const new_date = new Date();
     const change_interaction = await InteractionModel.findOne({freet: curr_freet, user: session_user}); // Should only be one interaction by user per freet
-    change_interaction.date = new_date;
+    change_interaction.dateCreated = new_date;
     change_interaction.interaction = new_interaction;
     await change_interaction.save();
 
@@ -84,6 +84,43 @@ class InteractionCollection {
     const curr_freet = await FreetCollection.findOne(freetId);
     const interaction = await InteractionModel.findOne({freet: curr_freet, user: session_user});
     return interaction;
+  }
+
+  /**
+   * Get interactions by the current session user on a particular date
+   *
+   * @param {number} month - The target month
+   * @param {number} day - The target day
+   * @param {year} year - The current year
+   * @param {string} userId - the id of the current session user
+   * @return {Promise<HydratedDocument<Interaction>[]>} - a list of posts made by the user on that date
+   */
+  static async interactionsByDate(year: number, month: number, day: number, userId: string | Types.ObjectId): Promise<Array<HydratedDocument<Interaction>>> {
+    const session_user = await UserCollection.findOneByUserId(userId);
+    const allInteractions = await this.getInteractions(userId);
+    const interactions: Array<HydratedDocument<Interaction>> = [];
+    for (const curr_interaction of allInteractions) {
+      const {dateCreated} = curr_interaction;
+      const interactionMonth = dateCreated.getMonth();
+      const interactionDay = dateCreated.getDate();
+      const interactionYear = dateCreated.getFullYear();
+
+      if (interactionDay === day && interactionMonth === month && interactionYear !== year) {
+        interactions.push(curr_interaction);
+      }
+    }
+
+    return interactions;
+  }
+
+  /**
+   * Deletes all interactions associated with the user
+   *
+   * @param {string} userId - the id of the current session user
+   */
+  static async deleteMany(userId: Types.ObjectId | string) {
+    const session_user = await UserCollection.findOneByUserId(userId);
+    const deleted = InteractionModel.deleteMany({user: session_user});
   }
 }
 

@@ -35,28 +35,26 @@ router.get(
 /**
  * Creates a new interaction
  *
- * @name POST /api/interactions
+ * @name POST /api/interactions/:freetId
  *
- * @param {string} freetId - the id of the freet to interact with
  * @param {string} interaction_type - the type of interaction
  * @return {InteractionResponse} - The created interaction object
  * @throws {403} - if the user is not logged in
- * @throws {400} - if the freet does not exist
+ * @throws {404} - if the freet does not exist
  * @throws {401} - if the interaction not valid/allowed interaction
  * @throws {413} - if the user has already interacted with this post
  */
 router.post(
-  '/',
+  '/:freetId?',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExistsBody,
+    freetValidator.isFreetExists,
     interactionValidator.isValidInteraction,
     interactionValidator.isInteractionDoesNotExist
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
-    console.log(userId);
-    const interaction = await InteractionCollection.addInteraction(req.body.interaction_type, req.body.freetId, userId);
+    const interaction = await InteractionCollection.addInteraction(req.body.interaction_type, req.params.freetId, userId);
 
     res.status(201).json({
       message: 'You have added your interaction!',
@@ -68,27 +66,26 @@ router.post(
 /**
  * Updates an interaction
  *
- * @name PUT /api/interactions
+ * @name PUT /api/interactions/:freetId
  *
- * @param {string} freetId - the id of the freet to interact with
  * @param {string} interaction_type - the type of interaction
  * @return {InteractionResponse} - The created interaction object
  * @throws {403} - if the user is not logged in
- * @throws {400} - if the freet does not exist
+ * @throws {404} - if the freet does not exist
  * @throws {401} - if the interaction not valid/allowed interaction
  * @throws {413} - if the user has not interacted with this post
  */
 router.put(
-  '/',
+  '/:freetId?',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExistsBody,
+    freetValidator.isFreetExists,
     interactionValidator.isValidInteraction,
     interactionValidator.isAlreadyExists
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
-    const interaction = await InteractionCollection.changeInteraction(req.body.interaction_type, req.body.freetId, userId);
+    const interaction = await InteractionCollection.changeInteraction(req.body.interaction_type, req.params.freetId, userId);
 
     res.status(201).json({
       message: 'You have updated your interaction',
@@ -100,24 +97,23 @@ router.put(
 /**
  * Deletes an interaction
  *
- * @name DELETE api/interactions
+ * @name DELETE api/interactions/:freetId
  *
- * @param {string} freetId - the id of the freet to interact with
  * @return {string} - A success message
  * @throws {403} - if the user is not logged in
- * @throws {400} - if the freet does not exist
+ * @throws {404} - if the freet does not exist
  * @throws {413} - if the user has not interacted with this post
  */
 router.delete(
-  '/',
+  '/:freetId?',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExistsBody,
+    freetValidator.isFreetExists,
     interactionValidator.canDelete
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';
-    const interaction = await InteractionCollection.deleteInteraction(req.body.freetId, userId);
+    const interaction = await InteractionCollection.deleteInteraction(req.params.freetId, userId);
 
     res.status(201).json({
       message: 'You have deleted your interaction'

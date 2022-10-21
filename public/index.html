@@ -10,6 +10,7 @@
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/filter.js"></script>
   <script src="/scripts/interaction.js"></script>
+  <script src="/scripts/assessment.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -74,6 +75,11 @@
         <form id="sign-out">
           <h3>Sign Out</h3>
           <input type="submit" value="Sign out">
+        </form>
+
+        <form id="get-memories">
+          <h3>Get today's memories</h3>
+          <input type="submit" value="Get memories">
         </form>
 
         <form id="view-all-freets">
@@ -149,6 +155,11 @@
           <input type="submit" value="View Followers">
         </form>
 
+        <form id="get-feed">
+          <h3>View Feed</h3>
+          <input type="submit" value="View Feed">
+        </form>
+
         <form id="get-status">
           <h3>See Filter Status</h3>
           <input type="submit" value="See Status">
@@ -197,6 +208,53 @@
             <textarea id="freetId" name="freetId"></textarea>
           </div>
           <input type="submit" value="Remove Interaction">
+        </form>
+
+        <form id="get-quiz">
+          <h3>Get Good Framaritan Assessment</h3>
+          <input type="submit" value="Get Assessment">
+        </form>
+
+        <form id="send-answers">
+          <h3>Please answer with "yes" if it is acceptable and "no" otherwise</h3>
+          <div>
+            <label for="question_1">Question 1:</label>
+            <textarea id="question_1" name="question_1"></textarea>
+          </div>
+          <div>
+            <label for="question_2">Question 2:</label>
+            <textarea id="question_2" name="question_2"></textarea>
+          </div>
+          <div>
+            <label for="question_3">Question 3:</label>
+            <textarea id="question_3" name="question_3"></textarea>
+          </div>
+          <div>
+            <label for="question_4">Question 4:</label>
+            <textarea id="question_4" name="question_4"></textarea>
+          </div>
+          <div>
+            <label for="question_5">Question 5:</label>
+            <textarea id="question_5" name="question_5"></textarea>
+          </div>
+          <div>
+            <label for="question_6">Question 6:</label>
+            <textarea id="question_6" name="question_6"></textarea>
+          </div>
+          <div>
+            <label for="question_7">Question 7:</label>
+            <textarea id="question_7" name="question_7"></textarea>
+          </div>
+          <div>
+            <label for="question_8">Question 8:</label>
+            <textarea id="question_8" name="question_8"></textarea>
+          </div>
+          <input type="submit" value="Submit Answers">
+        </form>
+
+        <form id="get-score">
+          <h3>Get Score on Good Framaritan Assessment</h3>
+          <input type="submit" value="Get Score">
         </form>
 
       </div>
