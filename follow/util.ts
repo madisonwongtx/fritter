@@ -43,7 +43,7 @@ const constructFeedResponse = async (item: HydratedDocument<Interaction | Freet 
   if ((typeof item === 'object') && ('freet' in item)) { // Type is interaction
     const user = await UserCollection.findOneByUserId(item.freet.authorId);
     return {
-      author: user.username, // How do I turn into username of author
+      author: user.username,
       content: item.freet.content,
       interaction: item.interaction,
       interaction_by: item.user.username
